@@ -23,15 +23,15 @@ export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
   temperature : number,
-  // queryPath: string,
+  api: string,
   key: string,
   messages: Message[],
 ) => {
-  let url = `http://52.40.2.252:8080/v1/chat/completions`;
+  let queryUrl = `${api}/v1/chat/completions`;
   // if (OPENAI_API_TYPE === 'azure') {
   //   url = `${OPENAI_API_HOST}/openai/deployments/${AZURE_DEPLOYMENT_ID}/chat/completions?api-version=${OPENAI_API_VERSION}`;
   // }
-  const res = await fetch(url, {
+  const res = await fetch(queryUrl, {
     headers: {
       'Content-Type': 'application/json',
       ...(OPENAI_API_TYPE === 'openai' && {
@@ -46,7 +46,7 @@ export const OpenAIStream = async (
     },
     method: 'POST',
     body: JSON.stringify({
-      // ...(OPENAI_API_TYPE === 'openai' && {model: model.id}),
+      ...(OPENAI_API_TYPE === 'openai' && {model: model.id}),
       messages: [
         {
           role: 'system',
@@ -56,7 +56,7 @@ export const OpenAIStream = async (
       ],
       max_tokens: 1000,
       temperature: temperature,
-      stream: true,
+      // stream: true,
     }),
   });
 
@@ -81,32 +81,36 @@ export const OpenAIStream = async (
     }
   }
 
-  return new ReadableStream({
-    async start(controller) {
-      const onParse = (event: ParsedEvent | ReconnectInterval) => {
-        if (event.type === 'event') {
-          const data = event.data;
+  return await res.json();
 
-          try {
-            const json = JSON.parse(data);
-            if (json.choices[0].finish_reason != null) {
-              controller.close();
-              return;
-            }
-            const text = json.choices[0].delta.content;
-            const queue = encoder.encode(text);
-            controller.enqueue(queue);
-          } catch (e) {
-            controller.error(e);
-          }
-        }
-      };
 
-      const parser = createParser(onParse);
 
-      for await (const chunk of res.body as any) {
-        parser.feed(decoder.decode(chunk));
-      }
-    },
-  });
+  // new ReadableStream({
+  //   async start(controller) {
+  //     const onParse = (event: ParsedEvent | ReconnectInterval) => {
+  //       if (event.type === 'event') {
+  //         const data = event.data;
+  //
+  //         try {
+  //           const json = JSON.parse(data);
+  //           if (json.choices[0].finish_reason != null) {
+  //             controller.close();
+  //             return;
+  //           }
+  //           const text = json.choices[0].delta.content;
+  //           const queue = encoder.encode(text);
+  //           controller.enqueue(queue);
+  //         } catch (e) {
+  //           controller.error(e);
+  //         }
+  //       }
+  //     };
+  //
+  //     const parser = createParser(onParse);
+  //
+  //     for await (const chunk of res.body as any) {
+  //       parser.feed(decoder.decode(chunk));
+  //     }
+  //   },
+  // });
 };

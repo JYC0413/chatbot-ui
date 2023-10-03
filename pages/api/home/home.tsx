@@ -259,6 +259,7 @@ const Home = ({
       });
     }
 
+    const api = localStorage.getItem('api');
     const apiKey = localStorage.getItem('apiKey');
 
     if (serverSideApiKeyIsSet) {
@@ -267,6 +268,10 @@ const Home = ({
       localStorage.removeItem('apiKey');
     } else if (apiKey) {
       dispatch({ field: 'apiKey', value: apiKey });
+    }
+
+    if (api) {
+      dispatch({ field: 'api', value: api });
     }
 
     const pluginKeys = localStorage.getItem('pluginKeys');
