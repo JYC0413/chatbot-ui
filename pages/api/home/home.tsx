@@ -400,7 +400,7 @@ const Home = ({
 };
 export default Home;
 
-export const getServerSideProps: GetStaticProps = async ({ locale }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const defaultModelId =
     (process.env.DEFAULT_MODEL &&
       Object.values(OpenAIModelID).includes(
