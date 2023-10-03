@@ -394,7 +394,7 @@ export const ChatInput = ({
             rel="noreferrer"
             className="underline"
         >
-          Flows Network
+          Flows.Network
         </a>
       </div>
     </div>
