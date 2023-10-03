@@ -59,13 +59,9 @@ export const ChatbarSettings = () => {
         onClick={() => setIsSettingDialog(true)}
       />
 
-      {!serverSideApiKeyIsSet ? (
-        <QueryUrl api={api} onApiChange={handleApiChange} />
-      ) : null}
+      <QueryUrl api={api} onApiChange={handleApiChange} />
 
-        {!serverSideApiKeyIsSet ? (
-        <Key apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
-      ) : null}
+      <Key apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
 
       {/*{!serverSidePluginKeysSet ? <PluginKeys /> : null}*/}
 
