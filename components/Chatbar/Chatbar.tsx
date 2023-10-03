@@ -46,6 +46,15 @@ export const Chatbar = () => {
     dispatch: chatDispatch,
   } = chatBarContextValue;
 
+  const handleApiChange = useCallback(
+    (api: string) => {
+      homeDispatch({ field: 'api', value: api });
+
+      localStorage.setItem('api', api);
+    },
+    [homeDispatch],
+  );
+
   const handleApiKeyChange = useCallback(
     (apiKey: string) => {
       homeDispatch({ field: 'apiKey', value: apiKey });
@@ -216,6 +225,7 @@ export const Chatbar = () => {
         handleExportData,
         handlePluginKeyChange,
         handleClearPluginKey,
+        handleApiChange,
         handleApiKeyChange,
       }}
     >
